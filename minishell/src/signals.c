@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "signals.h"
+#include "job.h"
+#include "shell.h"
 
 //To store current working process group.
 volatile sig_atomic_t foreground_pgid = 0;
@@ -19,6 +21,8 @@ static void handle_sigint(int sig) {
 static void handle_sigtstp(int sig) {
     (void)sig;
     printf(" Stopped progress %d\n", sig); 
+    int tmp = add_job(foreground_pgid, line);
+    stop_job(tmp);
     if (foreground_pgid > 0) {
         kill(-foreground_pgid, SIGTSTP);
     }
@@ -34,29 +38,3 @@ void init_signal_handlers(void) {
     }
 }
 
-int wait_foreground_job(pid_t pgid) {
-    int status;
-
-    foreground_pgid = pgid;
-
-    if (waitpid(pgid, &status, WUNTRACED) < 0) {
-        foreground_pgid = 0;
-        return 1;
-    }
-
-    foreground_pgid = 0;
-
-    if (WIFSTOPPED(status)) {
-        return 0;
-    }
-
-    if (WIFSIGNALED(status)) {
-        return 128 + WTERMSIG(status);
-    }
-
-    if (WIFEXITED(status)) {
-        return WEXITSTATUS(status);
-    }
-
-    return 0;
-}

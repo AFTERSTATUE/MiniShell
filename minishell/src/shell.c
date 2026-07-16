@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h> 
 #include <stdlib.h>
+#include <time.h>
 #include "shell.h"
 #include "parser.h"
 #include "executor.h"
@@ -12,6 +13,8 @@
 #include "color.h"
 #include "job.h"
 #include "signals.h"
+
+char line[MAX_LINE];    // #define MAX_LINE 1024
 
 // 4.1
 int redirect_output(struct Command *cmd) {
@@ -53,9 +56,24 @@ void restore_output(int saved_stdout) { // 不影响提示符输出 MiniShell>
     }
 }
 
+void write_history(const char *command) {
+    FILE *history_file = fopen(".myshell_history", "a");
+    if (history_file == NULL) {
+        perror("fopen");
+        return;
+    }
+    struct tm *cur_time;
+    time_t raw_time;
+    time(&raw_time);
+    cur_time = localtime(&raw_time);
+    char buffer[80];
+    strftime(buffer, 80, "%Y年%m月%d日 %H:%M:%S", cur_time);
+    fprintf(history_file, "%s %s", buffer, command);
+    fclose(history_file);
+}
 
 void shell_loop(void) {
-    char line[MAX_LINE];    // #define MAX_LINE 1024
+    
     char work_line[MAX_LINE];
 
     struct Command cmd;     // 存解析后的命令参数（argc + argv参数）
@@ -86,9 +104,16 @@ void shell_loop(void) {
             break;  // Ctrl + D, fgets() == NULL, break 跳出循环
         }
 
+        write_history(line);
+
         // 1.2 - 去除结尾换行
         line[strcspn(line, "\n")] = '\0';
         // strcspn() 首个 \n 所在位置下标 将 line[] 替换为 \0
+
+        //printf("%d\n", str_hash(line));
+        if(find_alias(line) != NULL){
+            strcpy(line, find_alias(line));
+        }
 
         strcpy(work_line, line);
 
@@ -102,13 +127,6 @@ void shell_loop(void) {
             strcpy(history[history_count], line);
             history_count++;
         }
-
-        // 1.3 - 解析命令
-        /*
-        if (!parse_line(line, &cmd)) {  // 跳过无效参数
-            continue;
-        }
-        */
 
         // 4.0
         if (!tokenize_line(work_line, tokens, &token_count)) {
@@ -162,19 +180,13 @@ void shell_loop(void) {
             continue;
         }
 
+        if(cmd.argc == 1 && find_alias(cmd.argv[0]) != NULL){
+            strcmp(line, find_alias(cmd.argv[0]));
+            continue;
+        }
+
         // 1.4 - 不是内置命令，就按外部命令执行
         execute_command(&cmd);  // fork + execvp 执行外部命令
 
-        // 1.1.5 调试
-        /*
-        printf("你输入的是：%s\n", line); 
-        */
-
-        // 1.2.4 调试
-        /* printf("argc = %d\n", cmd.argc);    // 打印总参数个数 argc
-        for (int i = 0; i < cmd.argc; i++) {    // 循环打印每个参数 argv[i] 内容
-            printf("argv[%d] = %s\n", i, cmd.argv[i]);
-        }
-        */
     }
 }
