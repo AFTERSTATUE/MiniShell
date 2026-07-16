@@ -56,14 +56,14 @@ char* status_to_str(jobstatus status){
 
 void job_query(){
     for(int i = 1; i <= tot_job_id; i++){
-        fprintf(stdout, "%d %d %s %s\n", i, jobs[i].pid, jobs[i].command, status_to_str(jobs[i].status));
+        fprintf(stdout, "%d \033[32m%d \033[0m%s \033[1m\033[31m%s\033[0m\n", i, jobs[i].pid, jobs[i].command, status_to_str(jobs[i].status));
     }
     //printf("%s %s %s\n", status_to_str(JOB_STOPPED), status_to_str(JOB_RUNNING), status_to_str(JOB_DONE));
 }
 
 void job_query_on_status(jobstatus status){
     for(int i = 1; i <= tot_job_id; i++){
-        if(status == jobs[i].status) fprintf(stdout, "%d %d %s %s\n", i, jobs[i].pid, jobs[i].command, status_to_str(jobs[i].status));
+        if(status == jobs[i].status) fprintf(stdout, "%d \033[32m%d \033[0m%s \033[1m\033[31m%s\033[0m\n", i, jobs[i].pid, jobs[i].command, status_to_str(jobs[i].status));
     }
 }
 

@@ -15,37 +15,42 @@ static char oldpwd[MAX_LINE] = "";
 // 2.6 - export
 extern char **environ;
 
-// 2.8 - alias 哈希表
-/*
-static struct AliasNode *alias_table[ALIAS_TABLE_SIZE] = {NULL};
+static char AliasHashTable[TABLE_MOD][MAX_LINE] = {'\0'};
 
-unsigned int has_alias(const char *str) {
-    unsigned int hash = 0;
+int qpow(int a , int x){
+    if(x == 0) return 1;
+    if(x == 1) return a % TABLE_MOD;
+    int c = qpow(a, x / 2) % TABLE_MOD;
+    if(x % 2) return (c % TABLE_MOD) * (c % TABLE_MOD) % TABLE_MOD * (a % TABLE_MOD) % TABLE_MOD;
+    else return (c % TABLE_MOD) * (c % TABLE_MOD) % TABLE_MOD;
+}
 
-    for (int i = 0; str[i] != '\0'; i++) {
-        hash = hash * 31 + (unsigned char)str[i];
+int str_hash(char *str){
+    int res = 0, len = strlen(str);
+    for(int i = 0; i < len; i++){
+        res = (res + (int)str[i] * qpow(MP, len - i)) % TABLE_MOD;
     }
-
-    return hash % ALIAS_TABLE_SIZE;
+    return res;
 }
 
-struct AliasNode *find_alias_node(const char *name) {
-    unsigned int index = hash_alias(name);
+void add_alias(char *src, char *str){
+    strcpy(AliasHashTable[str_hash(src)], str);
+    //printf("%d %s\n", str_hash(src), AliasHashTable[str_hash(src)]);
+}
 
-    for (struct AliasNode *cur = alias_table[index]; cur != NULL; cur = cur->next) {
-        if (strcmp(cur->name, name) == 0) {
-            return cur;
-        }
+void del_alias(char *src){
+    AliasHashTable[str_hash(src)][0] = '\0';
+}
+
+char *find_alias(char *str){
+    if(AliasHashTable[str_hash(str)][0] != '\0') {
+        return AliasHashTable[str_hash(str)];
     }
-
-    return NULL;
+    else{
+        //fprintf(stderr, "find_alias: alias not exist.\n");
+        return NULL;
+    }
 }
-
-void set_alias(const char *name, const char *value) {
-    unsigned int index = hash_alias(name);
-    struct AliasNode *node = find_alias_node(name);
-}
-*/
 
 int is_command(struct Command *cmd, const char *target_name) {
     // 空指针保护
@@ -69,7 +74,9 @@ int is_builtin(struct Command *cmd) {
            is_command(cmd, "rm") ||
            is_command(cmd, "touch") ||
            is_command(cmd, "ls") ||
-           is_command(cmd, "jobs");
+           is_command(cmd, "jobs") ||
+           is_command(cmd, "alias") ||
+           is_command(cmd, "unalias");
 }
 
 int handle_builtin(struct Command *cmd, char history[][MAX_LINE], int history_count) {
@@ -95,10 +102,31 @@ int handle_builtin(struct Command *cmd, char history[][MAX_LINE], int history_co
 
     // 2.1 - history 输出历史命令
     if (is_command(cmd, "history")) {
-        for (int i = 0; i < history_count; i++) {
-            printf("%d %s\n", i + 1, history[i]);
+        if(cmd->argc > 2){
+            fprintf(stderr, "history: too many arguments.\n");
+            return 0;
+        }
+        if(cmd->argc == 2){
+            if(strcmp(cmd->argv[1], "-c") == 0){
+                FILE *history_file = fopen(".myshell_history", "w");
+            }
+            else{
+                fprintf(stderr, "history: invalid argument.\n");
+                return 0;
+            }
+        }
+        FILE *history_file = fopen(".myshell_history", "r");
+        if (history_file == NULL) {
+            perror("fopen");
+            return 0;
         }
 
+        char line[MAX_LINE];
+        while (fgets(line, sizeof(line), history_file) != NULL) {
+            printf("%s", line);
+        }
+
+        fclose(history_file);
         return 1;
     }
 
@@ -383,6 +411,26 @@ int handle_builtin(struct Command *cmd, char history[][MAX_LINE], int history_co
             else{
                 fprintf(stderr, "jobs: invalid option: %s\n", cmd->argv[1]);
             }
+        }
+    }
+
+    if(is_command(cmd, "alias")){
+        for(int i = 1; i < cmd->argc - 1; i+=2){
+            int len = strlen(cmd->argv[i]);
+            if(cmd->argv[i][len-1] != '='){
+                fprintf(stderr, "alias: invalid format on ARGV %d.\n", i+1);
+            }
+            else{
+                cmd->argv[i][len-1] = '\0';
+                add_alias(cmd->argv[i], cmd->argv[i+1]);
+            }
+
+        }
+    }
+
+    if(is_command(cmd, "unalias")){
+        for(int i = 1; i < cmd->argc; i++){
+            del_alias(cmd->argv[i]);
         }
     }
 

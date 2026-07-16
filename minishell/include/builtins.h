@@ -2,6 +2,8 @@
 #define BUILTINS_H
 
 #include "shell.h"
+#define TABLE_MOD 1279
+#define MP 3
 
 // 1.4.2
 /*
@@ -17,5 +19,7 @@ int handle_builtin( struct Command *cmd,
 
 // 4.1
 int is_builtin(struct Command *cmd);
+char *find_alias(char *str);
+int str_hash(char *str);
                     
 #endif

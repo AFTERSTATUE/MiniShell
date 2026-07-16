@@ -34,29 +34,3 @@ void init_signal_handlers(void) {
     }
 }
 
-int wait_foreground_job(pid_t pgid) {
-    int status;
-
-    foreground_pgid = pgid;
-
-    if (waitpid(pgid, &status, WUNTRACED) < 0) {
-        foreground_pgid = 0;
-        return 1;
-    }
-
-    foreground_pgid = 0;
-
-    if (WIFSTOPPED(status)) {
-        return 0;
-    }
-
-    if (WIFSIGNALED(status)) {
-        return 128 + WTERMSIG(status);
-    }
-
-    if (WIFEXITED(status)) {
-        return WEXITSTATUS(status);
-    }
-
-    return 0;
-}
