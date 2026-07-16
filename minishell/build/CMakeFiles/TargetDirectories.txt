@@ -1,3 +1,0 @@
-/home/afterstatue/workspace/MiniShell/MiniShell-1/minishell/build/CMakeFiles/minishell.dir
-/home/afterstatue/workspace/MiniShell/MiniShell-1/minishell/build/CMakeFiles/edit_cache.dir
-/home/afterstatue/workspace/MiniShell/MiniShell-1/minishell/build/CMakeFiles/rebuild_cache.dir
