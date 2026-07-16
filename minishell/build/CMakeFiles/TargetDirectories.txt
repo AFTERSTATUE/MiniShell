@@ -1,3 +1,0 @@
-/home/cailibur/文档/Cscript/MiniShell/MiniShell/minishell/build/CMakeFiles/minishell.dir
-/home/cailibur/文档/Cscript/MiniShell/MiniShell/minishell/build/CMakeFiles/edit_cache.dir
-/home/cailibur/文档/Cscript/MiniShell/MiniShell/minishell/build/CMakeFiles/rebuild_cache.dir
