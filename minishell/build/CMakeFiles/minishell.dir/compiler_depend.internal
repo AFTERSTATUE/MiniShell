@@ -88,9 +88,12 @@ CMakeFiles/minishell.dir/src/builtins.c.o
 
 CMakeFiles/minishell.dir/src/executor.c.o
  /home/afterstatue/workspace/MIniShell/minishell/src/executor.c
+ /home/afterstatue/workspace/MIniShell/minishell/include/builtins.h
  /home/afterstatue/workspace/MIniShell/minishell/include/executor.h
+ /home/afterstatue/workspace/MIniShell/minishell/include/parser.h
  /home/afterstatue/workspace/MIniShell/minishell/include/redirection.h
  /home/afterstatue/workspace/MIniShell/minishell/include/shell.h
+ /home/afterstatue/workspace/MIniShell/minishell/include/tokenizer.h
  /usr/include/fcntl.h
  /usr/include/features-time64.h
  /usr/include/features.h

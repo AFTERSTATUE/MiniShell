@@ -350,7 +350,7 @@ int handle_builtin(struct Command *cmd, char history[][MAX_LINE], int history_co
         for (entry = readdir(dir); entry != NULL; entry = readdir(dir)) {
             // 过滤掉 . 和 .. 两个特殊目录 - . 当前目录 .. 上一级目录
             if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {  // d_name 文件名
-                printf("%s ", entry->d_name);
+                printf("%s\n", entry->d_name);
             }
         }
 

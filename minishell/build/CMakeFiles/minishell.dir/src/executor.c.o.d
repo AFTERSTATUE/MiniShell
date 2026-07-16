@@ -70,6 +70,9 @@ CMakeFiles/minishell.dir/src/executor.c.o: \
  /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
  /usr/include/x86_64-linux-gnu/bits/stat.h \
  /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
- /home/afterstatue/workspace/MIniShell/minishell/include/executor.h \
+ /home/afterstatue/workspace/MIniShell/minishell/include/parser.h \
  /home/afterstatue/workspace/MIniShell/minishell/include/shell.h \
+ /home/afterstatue/workspace/MIniShell/minishell/include/tokenizer.h \
+ /home/afterstatue/workspace/MIniShell/minishell/include/builtins.h \
+ /home/afterstatue/workspace/MIniShell/minishell/include/executor.h \
  /home/afterstatue/workspace/MIniShell/minishell/include/redirection.h

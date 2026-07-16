@@ -86,9 +86,12 @@ CMakeFiles/minishell.dir/src/builtins.c.o: /home/afterstatue/workspace/MIniShell
   /usr/lib/gcc/x86_64-linux-gnu/15/include/stddef.h
 
 CMakeFiles/minishell.dir/src/executor.c.o: /home/afterstatue/workspace/MIniShell/minishell/src/executor.c \
+  /home/afterstatue/workspace/MIniShell/minishell/include/builtins.h \
   /home/afterstatue/workspace/MIniShell/minishell/include/executor.h \
+  /home/afterstatue/workspace/MIniShell/minishell/include/parser.h \
   /home/afterstatue/workspace/MIniShell/minishell/include/redirection.h \
   /home/afterstatue/workspace/MIniShell/minishell/include/shell.h \
+  /home/afterstatue/workspace/MIniShell/minishell/include/tokenizer.h \
   /usr/include/fcntl.h \
   /usr/include/features-time64.h \
   /usr/include/features.h \
@@ -573,6 +576,8 @@ CMakeFiles/minishell.dir/src/main.c.o:
 
 /usr/include/x86_64-linux-gnu/bits/signum-generic.h:
 
+/home/afterstatue/workspace/MIniShell/minishell/include/tokenizer.h:
+
 /usr/include/x86_64-linux-gnu/bits/stat.h:
 
 /usr/include/x86_64-linux-gnu/bits/siginfo-consts.h:
@@ -600,8 +605,6 @@ CMakeFiles/minishell.dir/src/redirection.c.o:
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
 
 /usr/include/x86_64-linux-gnu/sys/wait.h:
-
-/home/afterstatue/workspace/MIniShell/minishell/include/tokenizer.h:
 
 /home/afterstatue/workspace/MIniShell/minishell/src/redirection.c:
 

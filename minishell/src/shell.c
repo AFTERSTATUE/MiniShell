@@ -105,6 +105,20 @@ void shell_loop(void) {
             continue;
         }
 
+        // 管道
+        int has_pipe = 0;
+        for (int i = 0; i < token_count; i++) {
+            if (tokens[i].type == TOK_PIPE) {
+                has_pipe = 1;
+                break;
+            }
+        }
+        // if 有管道
+        if (has_pipe) {
+            execute_pipeline(tokens, token_count, history, history_count);
+            continue;
+        }
+
         if (!parse_tokens(tokens, token_count, &cmd)) {
             fprintf(stderr, "parse error\n");
             continue;
